@@ -8,7 +8,8 @@ var {
   TouchableOpacity,
   View,
   Animated,
-} = React;
+} = require('react-native');
+
 
 var deviceWidth = Dimensions.get('window').width;
 var DOT_SIZE = 6;

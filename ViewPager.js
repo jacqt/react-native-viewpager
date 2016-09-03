@@ -8,8 +8,11 @@ var {
   TouchableOpacity,
   PanResponder,
   Animated,
-  PropTypes,
   StyleSheet,
+} = require('react-native');
+
+var {
+  PropTypes,
 } = React;
 
 var StaticRenderer = require('react-native/Libraries/Components/StaticRenderer');
