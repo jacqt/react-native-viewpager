@@ -43,6 +43,7 @@ var ViewPager = React.createClass({
     locked: PropTypes.bool,
     autoPlay: PropTypes.bool,
     animation: PropTypes.func,
+    bleedingMode: PropTypes.bool,
   },
 
   fling: false,
@@ -59,6 +60,7 @@ var ViewPager = React.createClass({
             tension: 50,
           })
       },
+      bleedingMode: false,
     }
   },
 
@@ -256,9 +258,10 @@ var ViewPager = React.createClass({
     var bodyComponents = [];
 
     var pagesNum = 0;
-    var hasLeft = false;
     var viewWidth = this.state.viewWidth;
 
+    let hasLeft = false;
+    let hasRight = false;
     if(pageIDs.length > 0 && viewWidth > 0) {
       // left page
       if (this.state.currentPage > 0) {
@@ -279,9 +282,11 @@ var ViewPager = React.createClass({
       if (this.state.currentPage < pageIDs.length - 1) {
         bodyComponents.push(this._getPage(this.state.currentPage + 1));
         pagesNum++;
+        hasRight = true;
       } else if (this.state.currentPage == pageIDs.length - 1 && this.props.isLoop) {
-        bodyComponents.push(this._getPage(0, true));
+        bodyComponents.push(this.egetPage(0, true));
         pagesNum++;
+        hasRight = true;
       }
     }
 
@@ -293,8 +298,14 @@ var ViewPager = React.createClass({
 
     // this.childIndex = hasLeft ? 1 : 0;
     // this.state.scrollValue.setValue(this.childIndex);
+    const border = (viewWidth - this.props.itemWidth) / 2;
+    let outputRange = this.props.bleedingMode ? [border, -this.props.itemWidth+border] : [0, -viewWidth];
+    //if (!hasLeft) outputRange[0] -= border;
+    //if (!hasRight) outputRange[1] += border; 
+    //console.warn(hasLeft, hasRight, pagesNum);
     var translateX = this.state.scrollValue.interpolate({
-      inputRange: [0, 1], outputRange: [0, -viewWidth]
+      inputRange: [0, 1],
+      outputRange,
     });
 
     return (
