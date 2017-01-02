@@ -263,6 +263,13 @@ var ViewPager = React.createClass({
     let hasLeft = false;
     let hasRight = false;
     if(pageIDs.length > 0 && viewWidth > 0) {
+      // 2x left page
+      if (this.state.currentPage > 1 && this.props.bleedingMode) {
+        bodyComponents.push(this._getPage(this.state.currentPage - 2));
+        pagesNum++;
+        // hasLeft = true;
+      }
+
       // left page
       if (this.state.currentPage > 0) {
         bodyComponents.push(this._getPage(this.state.currentPage - 1));
@@ -288,6 +295,13 @@ var ViewPager = React.createClass({
         pagesNum++;
         hasRight = true;
       }
+
+      // 2x right page
+      if (this.state.currentPage < pageIDs.length -2 && this.props.bleedingMode) {
+        bodyComponents.push(this._getPage(this.state.currentPage + 2));
+        pagesNum++;
+        // hasLeft = true;
+      }
     }
 
     var sceneContainerStyle = {
@@ -300,6 +314,11 @@ var ViewPager = React.createClass({
     // this.state.scrollValue.setValue(this.childIndex);
     const border = (viewWidth - this.props.itemWidth) / 2;
     let outputRange = this.props.bleedingMode ? [border, -this.props.itemWidth+border] : [0, -viewWidth];
+
+    if (this.state.currentPage > 1 && this.props.bleedingMode) {
+      outputRange = [border - this.props.itemWidth, border - 2 * this.props.itemWidth ];
+    }
+
     //if (!hasLeft) outputRange[0] -= border;
     //if (!hasRight) outputRange[1] += border; 
     //console.warn(hasLeft, hasRight, pagesNum);
