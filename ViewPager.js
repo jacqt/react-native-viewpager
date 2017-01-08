@@ -44,6 +44,7 @@ var ViewPager = React.createClass({
     autoPlay: PropTypes.bool,
     animation: PropTypes.func,
     bleedingMode: PropTypes.bool,
+    onPressCenterPage: PropTypes.func,
   },
 
   fling: false,
@@ -199,9 +200,9 @@ var ViewPager = React.createClass({
     if (pageNumber > 0 || this.props.isLoop) {
       nextChildIdx = 1;
     }
-    
+
     moved && this.props.willChangePage && this.props.willChangePage(pageNumber);
-    
+
     this.props.animation(this.state.scrollValue, scrollStep, gs)
       .start((event) => {
         if (event.finished) {
@@ -272,7 +273,11 @@ var ViewPager = React.createClass({
 
       // left page
       if (this.state.currentPage > 0) {
-        bodyComponents.push(this._getPage(this.state.currentPage - 1));
+        bodyComponents.push(
+          <TouchableOpacity onPress={() => this.movePage(-1)}>
+            {this._getPage(this.state.currentPage - 1)}
+          </TouchableOpacity>
+        );
         pagesNum++;
         hasLeft = true;
       } else if (this.state.currentPage == 0 && this.props.isLoop) {
@@ -282,12 +287,20 @@ var ViewPager = React.createClass({
       }
 
       // center page
-      bodyComponents.push(this._getPage(this.state.currentPage));
+      bodyComponents.push(
+        <TouchableOpacity onPress={() => this.props.onPressCenterPage(this.props.dataSource.getPageData(this.state.currentPage))}>
+          {this._getPage(this.state.currentPage)}
+        </TouchableOpacity>
+      );
       pagesNum++;
 
       // right page
       if (this.state.currentPage < pageIDs.length - 1) {
-        bodyComponents.push(this._getPage(this.state.currentPage + 1));
+        bodyComponents.push(
+          <TouchableOpacity onPress={() => this.movePage(1)}>
+            {this._getPage(this.state.currentPage + 1)}
+          </TouchableOpacity>
+        );
         pagesNum++;
         hasRight = true;
       } else if (this.state.currentPage == pageIDs.length - 1 && this.props.isLoop) {
@@ -320,7 +333,7 @@ var ViewPager = React.createClass({
     }
 
     //if (!hasLeft) outputRange[0] -= border;
-    //if (!hasRight) outputRange[1] += border; 
+    //if (!hasRight) outputRange[1] += border;
     //console.warn(hasLeft, hasRight, pagesNum);
     var translateX = this.state.scrollValue.interpolate({
       inputRange: [0, 1],
