@@ -273,11 +273,16 @@ var ViewPager = React.createClass({
 
       // left page
       if (this.state.currentPage > 0) {
-        bodyComponents.push(
-          <TouchableOpacity onPress={() => this.movePage(-1)}>
-            {this._getPage(this.state.currentPage - 1)}
-          </TouchableOpacity>
-        );
+        if (this.props.bleedingMode) {
+          bodyComponents.push(
+            <TouchableOpacity onPress={() => this.movePage(-1)}>
+              {this._getPage(this.state.currentPage - 1)}
+            </TouchableOpacity>
+          );
+        } else {
+          bodyComponents.push(this._getPage(this.state.currentPage - 1));
+        }
+
         pagesNum++;
         hasLeft = true;
       } else if (this.state.currentPage == 0 && this.props.isLoop) {
@@ -287,24 +292,40 @@ var ViewPager = React.createClass({
       }
 
       // center page
-      bodyComponents.push(
-        <TouchableOpacity onPress={() => this.props.onPressCenterPage(this.props.dataSource.getPageData(this.state.currentPage))}>
-          {this._getPage(this.state.currentPage)}
-        </TouchableOpacity>
-      );
+      if (this.props.bleedingMode) {
+        let onPressFunction = null;
+        if (this.props.onPressCenterPage) {
+          onPressFunction = () => {
+            this.props.onPressCenterPage(this.props.dataSource.getPageData(this.state.currentPage));
+          }
+        }
+        bodyComponents.push(
+          <TouchableOpacity onPress={onPressFunction}>
+            {this._getPage(this.state.currentPage)}
+          </TouchableOpacity>
+        );
+      } else {
+        bodyComponents.push(this._getPage(this.state.currentPage));
+      }
       pagesNum++;
 
       // right page
       if (this.state.currentPage < pageIDs.length - 1) {
-        bodyComponents.push(
-          <TouchableOpacity onPress={() => this.movePage(1)}>
-            {this._getPage(this.state.currentPage + 1)}
-          </TouchableOpacity>
-        );
+        if (this.props.bleedingMode) {
+          bodyComponents.push(
+            <TouchableOpacity onPress={() => this.movePage(1)}>
+              {this._getPage(this.state.currentPage + 1)}
+            </TouchableOpacity>
+          );
+        } else {
+          bodyComponents.push(this._getPage(this.state.currentPage + 1));
+        }
+
+
         pagesNum++;
         hasRight = true;
       } else if (this.state.currentPage == pageIDs.length - 1 && this.props.isLoop) {
-        bodyComponents.push(this.egetPage(0, true));
+        bodyComponents.push(this._getPage(0, true));
         pagesNum++;
         hasRight = true;
       }
