@@ -18,6 +18,7 @@ var DOT_SAPCE = 5;
 var styles = StyleSheet.create({
   tab: {
     alignItems: 'center',
+    paddingBottom: 15,
   },
 
   tabs: {
@@ -40,9 +41,9 @@ var styles = StyleSheet.create({
     width: DOT_SIZE,
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
-    backgroundColor: "#005A1D",
+    backgroundColor: "#2dcf71",
     margin: DOT_SAPCE,
-    bottom: 0,
+    bottom: 15,
   },
 });
 
