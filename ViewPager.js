@@ -120,6 +120,11 @@ var ViewPager = React.createClass({
         var offsetX = -dx / this.state.viewWidth + this.childIndex;
         this.state.scrollValue.setValue(offsetX);
       },
+      onPanResponderGrant: () => {
+        if (this.props.onPanResponderGrant) {
+          this.props.onPanResponderGrant()
+        }
+      }
     });
 
     if (this.props.isLoop) {
@@ -212,6 +217,10 @@ var ViewPager = React.createClass({
           this.setState({
             currentPage: pageNumber,
           });
+
+          if (this.props.onPanResponderRelease) {
+            this.props.onPanResponderRelease();
+          }
         }
         moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
       });
