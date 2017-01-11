@@ -228,7 +228,7 @@ var ViewPager = React.createClass({
       return React.cloneElement(this.props.renderPageIndicator(), props);
     } else {
       return (
-        <View style={styles.indicators}>
+        <View style={[styles.indicators, this.props.indicatorStyles]}>
           <DefaultViewPageIndicator {...props} />
         </View>
       );
